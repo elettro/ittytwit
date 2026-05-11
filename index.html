@@ -116,6 +116,10 @@ a.masthead:hover { background: #111122; }
 .btn-vote:disabled { background: var(--ink3); cursor: not-allowed; }
 .btn-results { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; background: none; color: var(--ink2); border: 1px solid var(--border2); padding: 11px 22px; border-radius: 8px; cursor: pointer; transition: border-color 0.15s, color 0.15s; }
 .btn-results:hover { border-color: var(--ink); color: var(--ink); }
+.btn-share { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; background: none; color: var(--ink2); border: 1px solid var(--border2); padding: 11px 22px; border-radius: 8px; cursor: pointer; transition: border-color 0.15s, color 0.15s; }
+.btn-share:hover { border-color: var(--ink); color: var(--ink); }
+.share-msg { font-family: 'DM Mono', monospace; font-size: 11px; color: #1a6b3a; display: none; align-items: center; padding: 4px 0; }
+.share-msg.visible { display: flex; }
 .vote-msg { font-size: 12px; font-family: 'DM Mono', monospace; padding: 9px 14px; border-radius: 8px; display: none; align-items: center; gap: 8px; }
 .vote-msg.success { display: flex; background: #edfbf3; color: #1a6b3a; border: 1px solid #a8dfbc; }
 .vote-msg.error-msg { display: flex; background: #fdf0ef; color: var(--accent); border: 1px solid #f5a89e; }
@@ -219,6 +223,8 @@ footer { max-width: 980px; margin: 0 auto; padding: 20px 32px; border-top: 1px s
       <div class="poll-actions">
         <button class="btn-vote" id="btn-vote">Vote</button>
         <button class="btn-results" id="btn-results">View Results</button>
+        <button class="btn-share" id="btn-share">⬡ Share Poll</button>
+        <div class="share-msg" id="share-msg">✓ Link copied!</div>
         <div class="vote-msg" id="vote-msg"></div>
       </div>
     </div>
@@ -479,11 +485,12 @@ function renderDirectory() {
 }
 
 /* ——— POLL VIEW ——— */
-function openPoll(poll) {
+function openPoll(poll, pushHash=true) {
   currentPoll = poll; selectedAnswers.clear();
   $('directory').style.display = 'none';
   $('poll-view').style.display = 'block';
   $('pv-question').textContent = poll.question;
+  if (pushHash) history.replaceState(null, '', '#poll-' + poll.id);
   const pvDate = $('pv-date');
   const dateDisplay = fmtDate(poll.date);
   if (dateDisplay) { pvDate.textContent = dateDisplay; pvDate.style.display = 'block'; }
@@ -553,11 +560,38 @@ function renderResults(poll) {
 /* ——— BACK ——— */
 $('back-btn').addEventListener('click', () => {
   $('poll-view').style.display='none'; $('directory').style.display='block';
-  currentPoll=null; window.scrollTo({top:0,behavior:'smooth'});
+  currentPoll=null;
+  history.replaceState(null, '', window.location.pathname);
+  window.scrollTo({top:0,behavior:'smooth'});
 });
 
 function showMsg(msg, cls) { const el=$('vote-msg'); el.textContent=msg; el.className='vote-msg '+cls; }
 function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+/* ——— SHARE BUTTON ——— */
+$('btn-share').addEventListener('click', () => {
+  const url = window.location.href.split('#')[0] + '#poll-' + currentPoll.id;
+  navigator.clipboard.writeText(url).then(() => {
+    const msg = $('share-msg');
+    msg.classList.add('visible');
+    setTimeout(() => msg.classList.remove('visible'), 2500);
+  });
+});
+
+/* ——— HASH ROUTING — open poll directly from URL ——— */
+function checkHash() {
+  const hash = window.location.hash;
+  if (!hash.startsWith('#poll-')) return;
+  const pid = hash.replace('#poll-', '');
+  const poll = allPolls.find(p => String(p.id) === pid);
+  if (poll) openPoll(poll, false);
+}
+
+const _origLoad = loadPolls;
+async function loadPolls() {
+  await _origLoad();
+  checkHash();
+}
 
 loadPolls();
 </script>
