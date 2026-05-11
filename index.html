@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ittytwit Polls — Do You Think What We Think?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a2e;
+    --ink2: #3d3d5c;
+    --ink3: #7a7a9a;
+    --cream: #f5f2eb;
+    --cream2: #ede9df;
+    --cream3: #e2ddd3;
+    --accent: #c0392b;
+    --accent2: #e74c3c;
+    --gold: #d4a843;
+    --border: rgba(26,26,46,0.12);
+    --border2: rgba(26,26,46,0.22);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* ——— MASTHEAD ——— */
+  .masthead {
+    background: var(--ink);
+    padding: 0;
+    border-bottom: 4px solid var(--accent);
+  }
+  .masthead-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 28px 24px 22px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .masthead-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: 0.9;
+  }
+  .masthead-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 7vw, 68px);
+    letter-spacing: 0.03em;
+    color: #fff;
+    line-height: 1;
+    text-align: center;
+  }
+  .masthead-title span { color: var(--accent2); }
+  .masthead-sub {
+    font-size: 12px;
+    color: rgba(255,255,255,0.45);
+    letter-spacing: 0.08em;
+    font-style: italic;
+    margin-top: 2px;
+  }
+
+  /* ——— WRAPPER ——— */
+  .wrapper {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 24px 60px;
+  }
+
+  /* ——— STATE MESSAGES ——— */
+  .status-bar {
+    padding: 14px 20px;
+    margin: 24px 0 0;
+    border-radius: 4px;
+    font-size: 13px;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.03em;
+  }
+  .status-bar.loading {
+    background: var(--cream2);
+    color: var(--ink2);
+    border-left: 3px solid var(--gold);
+  }
+  .status-bar.error {
+    background: #fdf0ef;
+    color: var(--accent);
+    border-left: 3px solid var(--accent);
+  }
+
+  /* ——— DIRECTORY ——— */
+  #directory { margin-top: 32px; }
+
+  .dir-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding-bottom: 10px;
+    border-bottom: 1.5px solid var(--ink);
+    margin-bottom: 20px;
+  }
+  .dir-header-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink3);
+  }
+  .dir-header-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--ink3);
+  }
+
+  .poll-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+  }
+
+  .poll-card {
+    background: #fff;
+    border: 1px solid var(--border2);
+    border-radius: 2px;
+    padding: 20px 22px 18px;
+    cursor: pointer;
+    transition: box-shadow 0.15s, transform 0.12s, border-color 0.15s;
+    position: relative;
+    overflow: hidden;
+  }
+  .poll-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.2s;
+  }
+  .poll-card:hover {
+    box-shadow: 0 4px 20px rgba(26,26,46,0.1);
+    transform: translateY(-2px);
+    border-color: var(--ink);
+  }
+  .poll-card:hover::before { transform: scaleX(1); }
+
+  .card-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    margin-bottom: 8px;
+  }
+  .card-question {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.45;
+    color: var(--ink);
+    margin-bottom: 14px;
+  }
+  .card-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--ink3);
+    font-family: 'DM Mono', monospace;
+  }
+  .card-vote-count {
+    background: var(--cream2);
+    padding: 3px 8px;
+    border-radius: 2px;
+  }
+  .card-arrow {
+    font-size: 16px;
+    color: var(--ink2);
+    transition: transform 0.15s;
+  }
+  .poll-card:hover .card-arrow { transform: translateX(3px); }
+
+  /* ——— POLL VIEW ——— */
+  #poll-view { display: none; margin-top: 0; }
+
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin: 28px 0 0;
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.08em;
+    color: var(--ink2);
+    cursor: pointer;
+    text-transform: uppercase;
+    border: none;
+    background: none;
+    padding: 0;
+    transition: color 0.15s;
+  }
+  .back-btn:hover { color: var(--accent); }
+
+  .poll-masthead {
+    margin-top: 20px;
+    padding: 28px 32px 24px;
+    background: var(--ink);
+    border-radius: 2px;
+    position: relative;
+  }
+  .poll-masthead-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+    opacity: 0.85;
+  }
+  .poll-masthead-headline {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(22px, 5vw, 48px);
+    color: #fff;
+    line-height: 1.05;
+    letter-spacing: 0.02em;
+  }
+  .poll-masthead-sub {
+    margin-top: 10px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.5;
+    font-style: italic;
+    max-width: 600px;
+  }
+
+  .poll-body {
+    background: #fff;
+    border: 1px solid var(--border2);
+    border-radius: 2px;
+    margin-top: 16px;
+    padding: 28px 32px 24px;
+  }
+
+  .poll-instruction {
+    font-family: 'DM Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink3);
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .answer-list { list-style: none; }
+
+  .answer-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 13px 16px;
+    margin-bottom: 8px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    cursor: pointer;
+    transition: background 0.12s, border-color 0.12s;
+    user-select: none;
+  }
+  .answer-item:hover {
+    background: var(--cream);
+    border-color: var(--border2);
+  }
+  .answer-item.selected {
+    background: #fdf0ef;
+    border-color: var(--accent);
+  }
+
+  .answer-checkbox {
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid var(--border2);
+    border-radius: 2px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.12s, border-color 0.12s;
+    background: #fff;
+  }
+  .answer-item.selected .answer-checkbox {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .answer-checkbox-tick {
+    width: 10px;
+    height: 10px;
+    opacity: 0;
+    transition: opacity 0.1s;
+  }
+  .answer-item.selected .answer-checkbox-tick { opacity: 1; }
+
+  .answer-letter {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--ink3);
+    flex-shrink: 0;
+    padding-top: 1px;
+    min-width: 20px;
+  }
+  .answer-item.selected .answer-letter { color: var(--accent); }
+
+  .answer-text {
+    font-size: 14.5px;
+    line-height: 1.4;
+    color: var(--ink);
+  }
+
+  .poll-actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+
+  .btn-vote {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+  }
+  .btn-vote:hover { background: #a93226; }
+  .btn-vote:active { transform: scale(0.98); }
+  .btn-vote:disabled { background: var(--ink3); cursor: not-allowed; opacity: 0.5; }
+
+  .btn-results {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    background: none;
+    color: var(--ink2);
+    border: 1px solid var(--border2);
+    padding: 11px 22px;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .btn-results:hover { border-color: var(--ink); color: var(--ink); }
+
+  .vote-msg {
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+    padding: 9px 14px;
+    border-radius: 2px;
+    display: none;
+    align-items: center;
+    gap: 8px;
+  }
+  .vote-msg.success {
+    display: flex;
+    background: #edfbf3;
+    color: #1a6b3a;
+    border: 1px solid #a8dfbc;
+  }
+  .vote-msg.error-msg {
+    display: flex;
+    background: #fdf0ef;
+    color: var(--accent);
+    border: 1px solid #f5a89e;
+  }
+
+  /* ——— RESULTS ——— */
+  .results-panel {
+    display: none;
+    margin-top: 20px;
+    background: var(--cream2);
+    border: 1px solid var(--border2);
+    border-radius: 2px;
+    padding: 24px 28px;
+  }
+  .results-panel.visible { display: block; }
+  .results-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink3);
+    margin-bottom: 18px;
+  }
+  .result-row {
+    margin-bottom: 14px;
+  }
+  .result-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+    font-size: 13px;
+    color: var(--ink2);
+  }
+  .result-label-letter {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--ink3);
+    margin-right: 8px;
+  }
+  .result-label-text { flex: 1; }
+  .result-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--ink);
+    font-weight: 500;
+    margin-left: 12px;
+  }
+  .result-bar-track {
+    height: 6px;
+    background: var(--cream3);
+    border-radius: 1px;
+    overflow: hidden;
+  }
+  .result-bar-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 1px;
+    transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
+  }
+  .result-total {
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border2);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--ink3);
+  }
+
+  /* ——— FOOTER ——— */
+  footer {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 20px 24px;
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    color: var(--ink3);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <div class="masthead-inner">
+    <div class="masthead-tag">ittytwit // opinion polls</div>
+    <div class="masthead-title">Do You Think <span>What We Think?</span></div>
+    <div class="masthead-sub">Pick Your Choice(s) — Multiple Selections Allowed</div>
+  </div>
+</div>
+
+<div class="wrapper">
+
+  <div id="status-bar" class="status-bar loading">Loading polls from data source…</div>
+
+  <!-- DIRECTORY VIEW -->
+  <div id="directory" style="display:none;">
+    <div class="dir-header">
+      <span class="dir-header-label">Poll Directory</span>
+      <span class="dir-header-count" id="dir-count"></span>
+    </div>
+    <div class="poll-cards" id="poll-cards"></div>
+  </div>
+
+  <!-- POLL VIEW -->
+  <div id="poll-view">
+    <button class="back-btn" id="back-btn">← All Polls</button>
+
+    <div class="poll-masthead">
+      <div class="poll-masthead-eyebrow">Poll Question</div>
+      <div class="poll-masthead-headline" id="pv-question"></div>
+      <div class="poll-masthead-sub" id="pv-sub"></div>
+    </div>
+
+    <div class="poll-body">
+      <div class="poll-instruction">Select one or more answers below</div>
+      <ul class="answer-list" id="pv-answers"></ul>
+
+      <div class="poll-actions">
+        <button class="btn-vote" id="btn-vote">Vote</button>
+        <button class="btn-results" id="btn-results">View Results</button>
+        <div class="vote-msg" id="vote-msg"></div>
+      </div>
+    </div>
+
+    <div class="results-panel" id="results-panel">
+      <div class="results-title">Current Results</div>
+      <div id="results-body"></div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <span>ittytwit polls — live data</span>
+  <span id="footer-ts"></span>
+</footer>
+
+<script>
+const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ3CRLifNyDu2qf1ela4w8jE6VAaoyd1zOMyiGfQun8DKQVS4kWN3uTacEf92GnnKrAxz8ljqxmzADI/pub?gid=1863280240&single=true&output=csv';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzT1wqrTU6cQQWLe0ImULOGOo70LJuVuW08ZEWiHyhK_r-QbFylLXzqNroxFGkrYAKn/exec';
+
+/* ——— CSV PARSER ——— */
+function parseCSV(text) {
+  const rows = [];
+  const lines = text.split(/\r?\n/);
+  for (let line of lines) {
+    if (!line.trim()) continue;
+    const cols = [];
+    let inQ = false, cur = '';
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (ch === '"') { inQ = !inQ; }
+      else if (ch === ',' && !inQ) { cols.push(cur.trim()); cur = ''; }
+      else { cur += ch; }
+    }
+    cols.push(cur.trim());
+    rows.push(cols);
+  }
+  return rows;
+}
+
+/* ——— PARSE POLLS FROM ROWS ——— */
+function buildPolls(rows) {
+  if (rows.length < 2) return [];
+  const header = rows[0].map(h => h.toLowerCase().trim());
+  const polls = {};
+
+  const col = name => header.indexOf(name);
+  const idCol     = col('poll id') !== -1 ? col('poll id') : col('pollid');
+  const qCol      = col('question');
+  const ansCol    = col('answer');
+  const subCol    = col('sub question') !== -1 ? col('sub question') : col('subquestion');
+  const votesCol  = col('votes');
+
+  for (let i = 1; i < rows.length; i++) {
+    const r = rows[i];
+    if (!r || r.length < 2) continue;
+    const pid = r[idCol] || String(i);
+    const q   = qCol !== -1 ? (r[qCol] || '').trim() : '';
+    const ans = ansCol !== -1 ? (r[ansCol] || '').trim() : '';
+    const sub = subCol !== -1 ? (r[subCol] || '').trim() : '';
+    const vRaw = votesCol !== -1 ? (r[votesCol] || '0').trim() : '0';
+    const votes = parseInt(vRaw, 10) || 0;
+
+    if (!q || !ans) continue;
+
+    if (!polls[pid]) {
+      polls[pid] = { id: pid, question: q, sub: sub, answers: [] };
+    }
+    polls[pid].answers.push({ text: ans, votes: votes, rowIndex: i });
+  }
+
+  return Object.values(polls).map(p => {
+    p.answers.sort((a, b) => a.text.localeCompare(b.text));
+    return p;
+  });
+}
+
+/* ——— STATE ——— */
+let allPolls = [];
+let currentPoll = null;
+let selectedAnswers = new Set();
+let rawRows = [];
+
+/* ——— UI HELPERS ——— */
+const $ = id => document.getElementById(id);
+const statusBar = $('status-bar');
+
+function showStatus(msg, type='loading') {
+  statusBar.textContent = msg;
+  statusBar.className = 'status-bar ' + type;
+  statusBar.style.display = 'block';
+}
+function hideStatus() { statusBar.style.display = 'none'; }
+
+/* ——— LOAD DATA ——— */
+async function loadPolls() {
+  showStatus('Fetching poll data…', 'loading');
+  try {
+    const resp = await fetch(CSV_URL);
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    const text = await resp.text();
+    rawRows = parseCSV(text);
+    allPolls = buildPolls(rawRows);
+    if (!allPolls.length) throw new Error('No poll data found in sheet.');
+    hideStatus();
+    renderDirectory();
+    $('footer-ts').textContent = 'Loaded ' + new Date().toLocaleTimeString();
+  } catch(e) {
+    showStatus('Error loading polls: ' + e.message, 'error');
+  }
+}
+
+/* ——— DIRECTORY ——— */
+function renderDirectory() {
+  const dir = $('directory');
+  const cards = $('poll-cards');
+  $('dir-count').textContent = allPolls.length + ' poll' + (allPolls.length !== 1 ? 's' : '');
+  cards.innerHTML = '';
+
+  allPolls.forEach((poll, idx) => {
+    const totalVotes = poll.answers.reduce((s, a) => s + a.votes, 0);
+    const card = document.createElement('div');
+    card.className = 'poll-card';
+    card.innerHTML = `
+      <div class="card-num">Poll #${String(idx+1).padStart(2,'0')}</div>
+      <div class="card-question">${escHtml(poll.question)}</div>
+      <div class="card-meta">
+        <span class="card-vote-count">${totalVotes} vote${totalVotes !== 1 ? 's' : ''}</span>
+        <span class="card-arrow">→</span>
+      </div>
+    `;
+    card.addEventListener('click', () => openPoll(poll));
+    cards.appendChild(card);
+  });
+
+  dir.style.display = 'block';
+  $('poll-view').style.display = 'none';
+}
+
+/* ——— POLL VIEW ——— */
+function openPoll(poll) {
+  currentPoll = poll;
+  selectedAnswers.clear();
+  $('directory').style.display = 'none';
+  const pv = $('poll-view');
+  pv.style.display = 'block';
+  $('pv-question').textContent = poll.question;
+  $('pv-sub').textContent = poll.sub || '';
+  $('pv-sub').style.display = poll.sub ? 'block' : 'none';
+  renderAnswers(poll);
+  $('results-panel').classList.remove('visible');
+  $('vote-msg').className = 'vote-msg';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function renderAnswers(poll) {
+  const ul = $('pv-answers');
+  ul.innerHTML = '';
+  const letters = 'abcdefghijklmnopqrstuvwxyz';
+  poll.answers.forEach((ans, i) => {
+    const li = document.createElement('li');
+    li.className = 'answer-item' + (selectedAnswers.has(i) ? ' selected' : '');
+    li.dataset.idx = i;
+    li.innerHTML = `
+      <div class="answer-checkbox" aria-hidden="true">
+        <svg class="answer-checkbox-tick" viewBox="0 0 10 10" fill="none">
+          <path d="M1.5 5L4 7.5L8.5 2.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <span class="answer-letter">(${letters[i] || i})</span>
+      <span class="answer-text">${escHtml(ans.text)}</span>
+    `;
+    li.addEventListener('click', () => toggleAnswer(i, li));
+    ul.appendChild(li);
+  });
+}
+
+function toggleAnswer(idx, el) {
+  if (selectedAnswers.has(idx)) {
+    selectedAnswers.delete(idx);
+    el.classList.remove('selected');
+  } else {
+    selectedAnswers.add(idx);
+    el.classList.add('selected');
+  }
+}
+
+/* ——— VOTE ——— */
+$('btn-vote').addEventListener('click', async () => {
+  if (!selectedAnswers.size) {
+    showVoteMsg('Please select at least one answer.', 'error-msg');
+    return;
+  }
+  $('btn-vote').disabled = true;
+  showVoteMsg('Recording your vote…', 'loading-msg');
+  try {
+    const votes = [...selectedAnswers].map(idx => ({
+      pollId: String(currentPoll.id),
+      answerText: currentPoll.answers[idx].text
+    }));
+
+    const resp = await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ votes })
+    });
+
+    // no-cors means we can't read the response body — but if we got here without throwing, the POST was sent
+    selectedAnswers.forEach(idx => { currentPoll.answers[idx].votes += 1; });
+    showVoteMsg('✓ Vote recorded! Thank you.', 'success');
+    renderAnswers(currentPoll);
+    renderResults(currentPoll);
+    $('results-panel').classList.add('visible');
+    updateDirectoryCard(currentPoll);
+    selectedAnswers.clear();
+  } catch(e) {
+    showVoteMsg('Could not save vote: ' + e.message, 'error-msg');
+  } finally {
+    $('btn-vote').disabled = false;
+  }
+});
+
+function updateDirectoryCard(poll) {
+  const totalVotes = poll.answers.reduce((s, a) => s + a.votes, 0);
+  const idx = allPolls.indexOf(poll);
+  const cards = document.querySelectorAll('.poll-card');
+  if (cards[idx]) {
+    const vc = cards[idx].querySelector('.card-vote-count');
+    if (vc) vc.textContent = totalVotes + ' vote' + (totalVotes !== 1 ? 's' : '');
+  }
+}
+
+/* ——— RESULTS ——— */
+$('btn-results').addEventListener('click', () => {
+  const panel = $('results-panel');
+  if (panel.classList.contains('visible')) {
+    panel.classList.remove('visible');
+  } else {
+    renderResults(currentPoll);
+    panel.classList.add('visible');
+  }
+});
+
+function renderResults(poll) {
+  const body = $('results-body');
+  const total = poll.answers.reduce((s, a) => s + a.votes, 0);
+  const letters = 'abcdefghijklmnopqrstuvwxyz';
+  body.innerHTML = '';
+  poll.answers.forEach((ans, i) => {
+    const pct = total > 0 ? Math.round((ans.votes / total) * 100) : 0;
+    const row = document.createElement('div');
+    row.className = 'result-row';
+    row.innerHTML = `
+      <div class="result-label">
+        <span><span class="result-label-letter">(${letters[i] || i})</span><span class="result-label-text">${escHtml(ans.text)}</span></span>
+        <span class="result-count">${ans.votes} — ${pct}%</span>
+      </div>
+      <div class="result-bar-track">
+        <div class="result-bar-fill" style="width:${pct}%"></div>
+      </div>
+    `;
+    body.appendChild(row);
+  });
+  const tot = document.createElement('div');
+  tot.className = 'result-total';
+  tot.textContent = total + ' total vote' + (total !== 1 ? 's' : '') + ' cast';
+  body.appendChild(tot);
+}
+
+/* ——— BACK ——— */
+$('back-btn').addEventListener('click', () => {
+  $('poll-view').style.display = 'none';
+  $('directory').style.display = 'block';
+  currentPoll = null;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+/* ——— VOTE MSG ——— */
+function showVoteMsg(msg, cls) {
+  const el = $('vote-msg');
+  el.textContent = msg;
+  el.className = 'vote-msg ' + cls;
+}
+
+/* ——— UTIL ——— */
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+/* ——— INIT ——— */
+loadPolls();
+</script>
+</body>
+</html>
