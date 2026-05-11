@@ -556,28 +556,28 @@ function buildPolls(rows) {
   const polls = {};
 
   const col = name => header.indexOf(name);
-  const idCol     = col('poll id') !== -1 ? col('poll id') : col('pollid');
-  const qCol      = col('question');
-  const ansCol    = col('answer');
-  const subCol    = col('sub question') !== -1 ? col('sub question') : col('subquestion');
+  const idCol     = col('pollq_id');
+  const qCol      = col('pollq_question');
+  const ansCol    = col('polla_answers');
+  const ansIdCol  = col('polla_id');
   const votesCol  = col('votes');
 
   for (let i = 1; i < rows.length; i++) {
     const r = rows[i];
     if (!r || r.length < 2) continue;
-    const pid = r[idCol] || String(i);
-    const q   = qCol !== -1 ? (r[qCol] || '').trim() : '';
-    const ans = ansCol !== -1 ? (r[ansCol] || '').trim() : '';
-    const sub = subCol !== -1 ? (r[subCol] || '').trim() : '';
-    const vRaw = votesCol !== -1 ? (r[votesCol] || '0').trim() : '0';
+    const pid   = (r[idCol] || '').toString().trim() || String(i);
+    const q     = qCol !== -1 ? (r[qCol] || '').trim() : '';
+    const ans   = ansCol !== -1 ? (r[ansCol] || '').trim() : '';
+    const ansId = ansIdCol !== -1 ? (r[ansIdCol] || '').toString().trim() : '';
+    const vRaw  = votesCol !== -1 ? (r[votesCol] || '0').toString().trim() : '0';
     const votes = parseInt(vRaw, 10) || 0;
 
     if (!q || !ans) continue;
 
     if (!polls[pid]) {
-      polls[pid] = { id: pid, question: q, sub: sub, answers: [] };
+      polls[pid] = { id: pid, question: q, answers: [] };
     }
-    polls[pid].answers.push({ text: ans, votes: votes, rowIndex: i });
+    polls[pid].answers.push({ text: ans, ansId: ansId, votes: votes, rowIndex: i });
   }
 
   return Object.values(polls).map(p => {
@@ -707,6 +707,7 @@ $('btn-vote').addEventListener('click', async () => {
   try {
     const votes = [...selectedAnswers].map(idx => ({
       pollId: String(currentPoll.id),
+      ansId: currentPoll.answers[idx].ansId,
       answerText: currentPoll.answers[idx].text
     }));
 
