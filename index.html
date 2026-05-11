@@ -3,515 +3,207 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ittytwit Polls — Do You Think What We Think?</title>
+<title>IttyTwit Poll App</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --ink: #1a1a2e;
-    --ink2: #3d3d5c;
-    --ink3: #7a7a9a;
-    --cream: #f5f2eb;
-    --cream2: #ede9df;
-    --cream3: #e2ddd3;
-    --accent: #c0392b;
-    --accent2: #e74c3c;
-    --gold: #d4a843;
-    --border: rgba(26,26,46,0.12);
-    --border2: rgba(26,26,46,0.22);
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--cream);
-    color: var(--ink);
-    min-height: 100vh;
-  }
+:root {
+  --ink: #1a1a2e; --ink2: #3d3d5c; --ink3: #7a7a9a;
+  --cream: #f5f2eb; --cream2: #ede9df; --cream3: #e2ddd3;
+  --white: #ffffff; --accent: #c0392b; --accent2: #e74c3c; --gold: #d4a843;
+  --border: rgba(26,26,46,0.1); --border2: rgba(26,26,46,0.2);
+  --shadow: 0 2px 12px rgba(26,26,46,0.08);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: #edeae3; color: var(--ink); min-height: 100vh; }
 
-  /* ——— MASTHEAD ——— */
-  .masthead {
-    background: var(--ink);
-    padding: 0;
-    border-bottom: 4px solid var(--accent);
-  }
-  .masthead-inner {
-    max-width: 860px;
-    margin: 0 auto;
-    padding: 28px 24px 22px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-  }
-  .masthead-tag {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--gold);
-    opacity: 0.9;
-  }
-  .masthead-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(36px, 7vw, 68px);
-    letter-spacing: 0.03em;
-    color: #fff;
-    line-height: 1;
-    text-align: center;
-  }
-  .masthead-title span { color: var(--accent2); }
-  .masthead-sub {
-    font-size: 12px;
-    color: rgba(255,255,255,0.45);
-    letter-spacing: 0.08em;
-    font-style: italic;
-    margin-top: 2px;
-  }
+.masthead { background: var(--ink); border-bottom: 4px solid var(--accent); }
+.masthead-inner { max-width: 980px; margin: 0 auto; padding: 28px 32px 24px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.masthead-tag { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--gold); opacity: 0.9; }
+.masthead-headline { font-family: 'Bebas Neue', sans-serif; font-size: clamp(38px, 7vw, 72px); letter-spacing: 0.03em; color: #fff; line-height: 1; text-align: center; }
+.masthead-headline span { color: var(--accent2); }
+.masthead-sub { font-size: 13px; color: rgba(255,255,255,0.4); letter-spacing: 0.06em; font-style: italic; margin-top: 2px; }
 
-  /* ——— WRAPPER ——— */
-  .wrapper {
-    max-width: 860px;
-    margin: 0 auto;
-    padding: 0 24px 60px;
-  }
+.page { max-width: 980px; margin: 0 auto; padding: 0 32px 80px; }
 
-  /* ——— STATE MESSAGES ——— */
-  .status-bar {
-    padding: 14px 20px;
-    margin: 24px 0 0;
-    border-radius: 4px;
-    font-size: 13px;
-    font-family: 'DM Mono', monospace;
-    letter-spacing: 0.03em;
-  }
-  .status-bar.loading {
-    background: var(--cream2);
-    color: var(--ink2);
-    border-left: 3px solid var(--gold);
-  }
-  .status-bar.error {
-    background: #fdf0ef;
-    color: var(--accent);
-    border-left: 3px solid var(--accent);
-  }
+.hero { padding: 40px 0 32px; display: grid; grid-template-columns: 1fr auto; align-items: start; gap: 32px; border-bottom: 1px solid var(--border2); margin-bottom: 28px; }
+.hero-eyebrow { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink3); margin-bottom: 8px; }
+.hero-title { font-weight: 700; font-size: clamp(32px, 5vw, 52px); color: var(--ink); line-height: 1.05; margin-bottom: 14px; }
+.hero-desc { font-size: 15px; color: var(--ink2); line-height: 1.65; max-width: 520px; }
+.hero-stats { display: flex; gap: 12px; flex-shrink: 0; }
+.stat-card { background: var(--white); border: 1px solid var(--border2); border-radius: 12px; padding: 20px 24px; min-width: 120px; box-shadow: var(--shadow); }
+.stat-num { font-weight: 700; font-size: 36px; color: var(--ink); line-height: 1; }
+.stat-label { font-size: 12px; color: var(--ink3); margin-top: 4px; line-height: 1.3; }
 
-  /* ——— DIRECTORY ——— */
-  #directory { margin-top: 32px; }
+.filter-bar { background: var(--white); border: 1px solid var(--border2); border-radius: 12px; padding: 20px 24px; margin-bottom: 24px; box-shadow: var(--shadow); }
+.filter-row { display: flex; gap: 10px; align-items: center; }
+.search-input { flex: 1; border: 1px solid var(--border2); border-radius: 8px; padding: 10px 16px; font-size: 14px; font-family: 'DM Sans', sans-serif; color: var(--ink); background: #fafaf8; outline: none; transition: border-color 0.15s; }
+.search-input:focus { border-color: var(--ink); }
+.search-input::placeholder { color: var(--ink3); }
+.btn-reset { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; background: var(--ink); color: #fff; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; transition: background 0.15s; white-space: nowrap; }
+.btn-reset:hover { background: var(--accent); }
+.filter-status { font-size: 12px; color: var(--ink3); font-family: 'DM Mono', monospace; margin-top: 12px; }
 
-  .dir-header {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    padding-bottom: 10px;
-    border-bottom: 1.5px solid var(--ink);
-    margin-bottom: 20px;
-  }
-  .dir-header-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--ink3);
-  }
-  .dir-header-count {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: var(--ink3);
-  }
+.status-bar { padding: 12px 18px; margin-bottom: 20px; border-radius: 8px; font-size: 13px; font-family: 'DM Mono', monospace; }
+.status-bar.loading { background: var(--cream2); color: var(--ink2); border-left: 3px solid var(--gold); }
+.status-bar.error { background: #fdf0ef; color: var(--accent); border-left: 3px solid var(--accent); }
 
-  .poll-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 16px;
-  }
+.poll-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-bottom: 28px; }
 
-  .poll-card {
-    background: #fff;
-    border: 1px solid var(--border2);
-    border-radius: 2px;
-    padding: 20px 22px 18px;
-    cursor: pointer;
-    transition: box-shadow 0.15s, transform 0.12s, border-color 0.15s;
-    position: relative;
-    overflow: hidden;
-  }
-  .poll-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    background: var(--accent);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.2s;
-  }
-  .poll-card:hover {
-    box-shadow: 0 4px 20px rgba(26,26,46,0.1);
-    transform: translateY(-2px);
-    border-color: var(--ink);
-  }
-  .poll-card:hover::before { transform: scaleX(1); }
+.poll-card { background: var(--white); border: 1px solid var(--border2); border-radius: 10px; padding: 22px 24px 18px; cursor: pointer; position: relative; overflow: hidden; transition: box-shadow 0.15s, transform 0.12s, border-color 0.15s; box-shadow: var(--shadow); }
+.poll-card::after { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--accent); transform: scaleY(0); transform-origin: top; transition: transform 0.2s; }
+.poll-card:hover { box-shadow: 0 6px 24px rgba(26,26,46,0.13); transform: translateY(-2px); border-color: var(--ink2); }
+.poll-card:hover::after { transform: scaleY(1); }
+.card-num { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--accent); letter-spacing: 0.12em; margin-bottom: 9px; }
+.card-question { font-size: 14px; font-weight: 500; line-height: 1.5; color: var(--ink); margin-bottom: 16px; }
+.card-footer { display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-family: 'DM Mono', monospace; color: var(--ink3); }
+.card-votes { background: var(--cream2); padding: 3px 9px; border-radius: 4px; }
+.card-arrow { transition: transform 0.15s; font-size: 14px; }
+.poll-card:hover .card-arrow { transform: translateX(4px); }
 
-  .card-num {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    color: var(--accent);
-    letter-spacing: 0.12em;
-    margin-bottom: 8px;
-  }
-  .card-question {
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 1.45;
-    color: var(--ink);
-    margin-bottom: 14px;
-  }
-  .card-meta {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 11px;
-    color: var(--ink3);
-    font-family: 'DM Mono', monospace;
-  }
-  .card-vote-count {
-    background: var(--cream2);
-    padding: 3px 8px;
-    border-radius: 2px;
-  }
-  .card-arrow {
-    font-size: 16px;
-    color: var(--ink2);
-    transition: transform 0.15s;
-  }
-  .poll-card:hover .card-arrow { transform: translateX(3px); }
+.pagination-bar { display: flex; align-items: center; justify-content: space-between; padding: 16px 0; border-top: 1px solid var(--border2); flex-wrap: wrap; gap: 12px; }
+.pagination-info { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--ink3); }
+.pagination-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.page-size-label { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--ink3); }
+.page-size-select { font-family: 'DM Mono', monospace; font-size: 11px; border: 1px solid var(--border2); border-radius: 6px; padding: 5px 10px; background: var(--white); color: var(--ink); cursor: pointer; outline: none; }
+.page-btns { display: flex; gap: 4px; flex-wrap: wrap; }
+.page-btn { font-family: 'DM Mono', monospace; font-size: 11px; border: 1px solid var(--border2); border-radius: 6px; padding: 5px 12px; background: var(--white); color: var(--ink); cursor: pointer; transition: background 0.12s, border-color 0.12s; }
+.page-btn:hover:not(:disabled) { background: var(--cream2); border-color: var(--ink2); }
+.page-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.page-btn.active { background: var(--ink); color: #fff; border-color: var(--ink); }
 
-  /* ——— POLL VIEW ——— */
-  #poll-view { display: none; margin-top: 0; }
+#poll-view { display: none; }
+.back-btn { display: inline-flex; align-items: center; gap: 6px; margin: 32px 0 0; font-size: 12px; font-family: 'DM Mono', monospace; letter-spacing: 0.1em; color: var(--ink2); cursor: pointer; text-transform: uppercase; border: none; background: none; padding: 0; transition: color 0.15s; }
+.back-btn:hover { color: var(--accent); }
 
-  .back-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    margin: 28px 0 0;
-    font-size: 12px;
-    font-family: 'DM Mono', monospace;
-    letter-spacing: 0.08em;
-    color: var(--ink2);
-    cursor: pointer;
-    text-transform: uppercase;
-    border: none;
-    background: none;
-    padding: 0;
-    transition: color 0.15s;
-  }
-  .back-btn:hover { color: var(--accent); }
+.poll-hero { margin-top: 20px; padding: 30px 36px 26px; background: var(--ink); border-radius: 10px; }
+.poll-hero-eyebrow { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); opacity: 0.85; margin-bottom: 10px; }
+.poll-hero-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(24px, 4vw, 44px); color: #fff; line-height: 1.05; letter-spacing: 0.02em; }
 
-  .poll-masthead {
-    margin-top: 20px;
-    padding: 28px 32px 24px;
-    background: var(--ink);
-    border-radius: 2px;
-    position: relative;
-  }
-  .poll-masthead-eyebrow {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 10px;
-    opacity: 0.85;
-  }
-  .poll-masthead-headline {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(22px, 5vw, 48px);
-    color: #fff;
-    line-height: 1.05;
-    letter-spacing: 0.02em;
-  }
-  .poll-masthead-sub {
-    margin-top: 10px;
-    font-size: 13px;
-    color: rgba(255,255,255,0.55);
-    line-height: 1.5;
-    font-style: italic;
-    max-width: 600px;
-  }
+.poll-body { background: var(--white); border: 1px solid var(--border2); border-radius: 10px; margin-top: 14px; padding: 28px 32px; box-shadow: var(--shadow); }
+.poll-instruction { font-family: 'DM Mono', monospace; font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink3); margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
 
-  .poll-body {
-    background: #fff;
-    border: 1px solid var(--border2);
-    border-radius: 2px;
-    margin-top: 16px;
-    padding: 28px 32px 24px;
-  }
+.answer-list { list-style: none; }
+.answer-item { display: flex; align-items: flex-start; gap: 14px; padding: 13px 16px; margin-bottom: 8px; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; transition: background 0.12s, border-color 0.12s; user-select: none; }
+.answer-item:hover { background: var(--cream); border-color: var(--border2); }
+.answer-item.selected { background: #fdf0ef; border-color: var(--accent); }
+.answer-checkbox { width: 18px; height: 18px; border: 1.5px solid var(--border2); border-radius: 3px; flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; transition: background 0.12s, border-color 0.12s; background: #fff; }
+.answer-item.selected .answer-checkbox { background: var(--accent); border-color: var(--accent); }
+.tick { width: 10px; height: 10px; opacity: 0; transition: opacity 0.1s; }
+.answer-item.selected .tick { opacity: 1; }
+.answer-letter { font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; color: var(--ink3); flex-shrink: 0; padding-top: 1px; min-width: 22px; }
+.answer-item.selected .answer-letter { color: var(--accent); }
+.answer-text { font-size: 14.5px; line-height: 1.45; color: var(--ink); }
 
-  .poll-instruction {
-    font-family: 'DM Mono', monospace;
-    font-size: 10.5px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--ink3);
-    margin-bottom: 20px;
-    padding-bottom: 14px;
-    border-bottom: 1px solid var(--border);
-  }
+.poll-actions { display: flex; align-items: center; gap: 14px; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border); flex-wrap: wrap; }
+.btn-vote { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; background: var(--accent); color: #fff; border: none; padding: 12px 28px; border-radius: 8px; cursor: pointer; transition: background 0.15s, transform 0.1s; }
+.btn-vote:hover { background: #a93226; }
+.btn-vote:active { transform: scale(0.98); }
+.btn-vote:disabled { background: var(--ink3); cursor: not-allowed; }
+.btn-results { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; background: none; color: var(--ink2); border: 1px solid var(--border2); padding: 11px 22px; border-radius: 8px; cursor: pointer; transition: border-color 0.15s, color 0.15s; }
+.btn-results:hover { border-color: var(--ink); color: var(--ink); }
+.vote-msg { font-size: 12px; font-family: 'DM Mono', monospace; padding: 9px 14px; border-radius: 8px; display: none; align-items: center; gap: 8px; }
+.vote-msg.success { display: flex; background: #edfbf3; color: #1a6b3a; border: 1px solid #a8dfbc; }
+.vote-msg.error-msg { display: flex; background: #fdf0ef; color: var(--accent); border: 1px solid #f5a89e; }
 
-  .answer-list { list-style: none; }
+.results-panel { display: none; margin-top: 16px; background: var(--cream2); border: 1px solid var(--border2); border-radius: 10px; padding: 24px 28px; }
+.results-panel.visible { display: block; }
+.results-title { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink3); margin-bottom: 18px; }
+.result-row { margin-bottom: 14px; }
+.result-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; font-size: 13px; color: var(--ink2); }
+.result-label-letter { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--ink3); margin-right: 8px; }
+.result-label-text { flex: 1; }
+.result-count { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--ink); font-weight: 500; margin-left: 12px; }
+.result-bar-track { height: 6px; background: var(--cream3); border-radius: 2px; overflow: hidden; }
+.result-bar-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.6s cubic-bezier(0.4,0,0.2,1); }
+.result-total { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border2); font-family: 'DM Mono', monospace; font-size: 11px; color: var(--ink3); }
 
-  .answer-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 14px;
-    padding: 13px 16px;
-    margin-bottom: 8px;
-    border: 1px solid var(--border);
-    border-radius: 2px;
-    cursor: pointer;
-    transition: background 0.12s, border-color 0.12s;
-    user-select: none;
-  }
-  .answer-item:hover {
-    background: var(--cream);
-    border-color: var(--border2);
-  }
-  .answer-item.selected {
-    background: #fdf0ef;
-    border-color: var(--accent);
-  }
+footer { max-width: 980px; margin: 0 auto; padding: 20px 32px; border-top: 1px solid var(--border); font-size: 11px; font-family: 'DM Mono', monospace; color: var(--ink3); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
 
-  .answer-checkbox {
-    width: 18px;
-    height: 18px;
-    border: 1.5px solid var(--border2);
-    border-radius: 2px;
-    flex-shrink: 0;
-    margin-top: 1px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.12s, border-color 0.12s;
-    background: #fff;
-  }
-  .answer-item.selected .answer-checkbox {
-    background: var(--accent);
-    border-color: var(--accent);
-  }
-  .answer-checkbox-tick {
-    width: 10px;
-    height: 10px;
-    opacity: 0;
-    transition: opacity 0.1s;
-  }
-  .answer-item.selected .answer-checkbox-tick { opacity: 1; }
-
-  .answer-letter {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    font-weight: 500;
-    color: var(--ink3);
-    flex-shrink: 0;
-    padding-top: 1px;
-    min-width: 20px;
-  }
-  .answer-item.selected .answer-letter { color: var(--accent); }
-
-  .answer-text {
-    font-size: 14.5px;
-    line-height: 1.4;
-    color: var(--ink);
-  }
-
-  .poll-actions {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-top: 24px;
-    padding-top: 20px;
-    border-top: 1px solid var(--border);
-    flex-wrap: wrap;
-  }
-
-  .btn-vote {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    padding: 12px 28px;
-    border-radius: 2px;
-    cursor: pointer;
-    transition: background 0.15s, transform 0.1s;
-  }
-  .btn-vote:hover { background: #a93226; }
-  .btn-vote:active { transform: scale(0.98); }
-  .btn-vote:disabled { background: var(--ink3); cursor: not-allowed; opacity: 0.5; }
-
-  .btn-results {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    background: none;
-    color: var(--ink2);
-    border: 1px solid var(--border2);
-    padding: 11px 22px;
-    border-radius: 2px;
-    cursor: pointer;
-    transition: border-color 0.15s, color 0.15s;
-  }
-  .btn-results:hover { border-color: var(--ink); color: var(--ink); }
-
-  .vote-msg {
-    font-size: 12px;
-    font-family: 'DM Mono', monospace;
-    padding: 9px 14px;
-    border-radius: 2px;
-    display: none;
-    align-items: center;
-    gap: 8px;
-  }
-  .vote-msg.success {
-    display: flex;
-    background: #edfbf3;
-    color: #1a6b3a;
-    border: 1px solid #a8dfbc;
-  }
-  .vote-msg.error-msg {
-    display: flex;
-    background: #fdf0ef;
-    color: var(--accent);
-    border: 1px solid #f5a89e;
-  }
-
-  /* ——— RESULTS ——— */
-  .results-panel {
-    display: none;
-    margin-top: 20px;
-    background: var(--cream2);
-    border: 1px solid var(--border2);
-    border-radius: 2px;
-    padding: 24px 28px;
-  }
-  .results-panel.visible { display: block; }
-  .results-title {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--ink3);
-    margin-bottom: 18px;
-  }
-  .result-row {
-    margin-bottom: 14px;
-  }
-  .result-label {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 5px;
-    font-size: 13px;
-    color: var(--ink2);
-  }
-  .result-label-letter {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: var(--ink3);
-    margin-right: 8px;
-  }
-  .result-label-text { flex: 1; }
-  .result-count {
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    color: var(--ink);
-    font-weight: 500;
-    margin-left: 12px;
-  }
-  .result-bar-track {
-    height: 6px;
-    background: var(--cream3);
-    border-radius: 1px;
-    overflow: hidden;
-  }
-  .result-bar-fill {
-    height: 100%;
-    background: var(--accent);
-    border-radius: 1px;
-    transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
-  }
-  .result-total {
-    margin-top: 16px;
-    padding-top: 12px;
-    border-top: 1px solid var(--border2);
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: var(--ink3);
-  }
-
-  /* ——— FOOTER ——— */
-  footer {
-    max-width: 860px;
-    margin: 0 auto;
-    padding: 20px 24px;
-    border-top: 1px solid var(--border);
-    font-size: 11px;
-    font-family: 'DM Mono', monospace;
-    color: var(--ink3);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
+@media (max-width: 680px) {
+  .page { padding: 0 16px 60px; }
+  .masthead-inner { padding: 20px 16px 16px; }
+  .hero { grid-template-columns: 1fr; gap: 20px; }
+  .hero-stats { flex-direction: row; }
+  .poll-body { padding: 20px 18px; }
+  .poll-hero { padding: 22px 20px 18px; }
+}
 </style>
 </head>
 <body>
 
 <div class="masthead">
   <div class="masthead-inner">
-    <div class="masthead-tag">ittytwit // opinion polls</div>
-    <div class="masthead-title">Do You Think <span>What We Think?</span></div>
+    <div class="masthead-tag">IttyTwit Poll App</div>
+    <div class="masthead-headline">Do You Think <span>What We Think?</span></div>
     <div class="masthead-sub">Pick Your Choice(s) — Multiple Selections Allowed</div>
   </div>
 </div>
 
-<div class="wrapper">
+<div class="page">
 
-  <div id="status-bar" class="status-bar loading">Loading polls from data source…</div>
-
-  <!-- DIRECTORY VIEW -->
-  <div id="directory" style="display:none;">
-    <div class="dir-header">
-      <span class="dir-header-label">Poll Directory</span>
-      <span class="dir-header-count" id="dir-count"></span>
+  <div id="directory">
+    <div class="hero">
+      <div class="hero-left">
+        <div class="hero-eyebrow">IttyTwit Poll App</div>
+        <div class="hero-title">Poll Directory</div>
+        <div class="hero-desc">Browse all active polls, cast your vote on one or more answers, and see live results. Every poll supports multiple selections — pick as many as you think.</div>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-card">
+          <div class="stat-num" id="stat-polls">—</div>
+          <div class="stat-label">Total polls</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" id="stat-votes">—</div>
+          <div class="stat-label">Total votes cast</div>
+        </div>
+      </div>
     </div>
-    <div class="poll-cards" id="poll-cards"></div>
+
+    <div class="filter-bar">
+      <div class="filter-row">
+        <input type="text" class="search-input" id="search-input" placeholder="Search polls by keyword…">
+        <button class="btn-reset" id="btn-reset">Reset</button>
+      </div>
+      <div class="filter-status" id="filter-status"></div>
+    </div>
+
+    <div id="status-bar" class="status-bar loading">Loading polls…</div>
+
+    <div class="poll-grid" id="poll-grid"></div>
+
+    <div class="pagination-bar" id="pagination-bar" style="display:none;">
+      <div class="pagination-info" id="pagination-info"></div>
+      <div class="pagination-controls">
+        <span class="page-size-label">Show</span>
+        <select class="page-size-select" id="page-size-select">
+          <option value="10">10 per page</option>
+          <option value="25" selected>25 per page</option>
+          <option value="50">50 per page</option>
+          <option value="100">100 per page</option>
+          <option value="9999">All</option>
+        </select>
+        <div class="page-btns" id="page-btns"></div>
+      </div>
+    </div>
   </div>
 
-  <!-- POLL VIEW -->
   <div id="poll-view">
     <button class="back-btn" id="back-btn">← All Polls</button>
-
-    <div class="poll-masthead">
-      <div class="poll-masthead-eyebrow">Poll Question</div>
-      <div class="poll-masthead-headline" id="pv-question"></div>
-      <div class="poll-masthead-sub" id="pv-sub"></div>
+    <div class="poll-hero">
+      <div class="poll-hero-eyebrow">Poll Question</div>
+      <div class="poll-hero-title" id="pv-question"></div>
     </div>
-
     <div class="poll-body">
-      <div class="poll-instruction">Select one or more answers below</div>
+      <div class="poll-instruction">Select one or more answers, then vote</div>
       <ul class="answer-list" id="pv-answers"></ul>
-
       <div class="poll-actions">
         <button class="btn-vote" id="btn-vote">Vote</button>
         <button class="btn-results" id="btn-results">View Results</button>
         <div class="vote-msg" id="vote-msg"></div>
       </div>
     </div>
-
     <div class="results-panel" id="results-panel">
       <div class="results-title">Current Results</div>
       <div id="results-body"></div>
@@ -521,7 +213,7 @@
 </div>
 
 <footer>
-  <span>ittytwit polls — live data</span>
+  <span>IttyTwit Poll App — live data</span>
   <span id="footer-ts"></span>
 </footer>
 
@@ -529,16 +221,12 @@
 const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ3CRLifNyDu2qf1ela4w8jE6VAaoyd1zOMyiGfQun8DKQVS4kWN3uTacEf92GnnKrAxz8ljqxmzADI/pub?gid=1863280240&single=true&output=csv';
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzT1wqrTU6cQQWLe0ImULOGOo70LJuVuW08ZEWiHyhK_r-QbFylLXzqNroxFGkrYAKn/exec';
 
-/* ——— CSV PARSER ——— */
 function parseCSV(text) {
   const rows = [];
-  const lines = text.split(/\r?\n/);
-  for (let line of lines) {
+  for (const line of text.split(/\r?\n/)) {
     if (!line.trim()) continue;
-    const cols = [];
-    let inQ = false, cur = '';
-    for (let i = 0; i < line.length; i++) {
-      const ch = line[i];
+    const cols = []; let inQ = false, cur = '';
+    for (const ch of line) {
       if (ch === '"') { inQ = !inQ; }
       else if (ch === ',' && !inQ) { cols.push(cur.trim()); cur = ''; }
       else { cur += ch; }
@@ -549,262 +237,204 @@ function parseCSV(text) {
   return rows;
 }
 
-/* ——— PARSE POLLS FROM ROWS ——— */
 function buildPolls(rows) {
   if (rows.length < 2) return [];
   const header = rows[0].map(h => h.toLowerCase().trim());
+  const col = n => header.indexOf(n);
+  const idCol    = col('pollq_id');
+  const qCol     = col('pollq_question');
+  const ansCol   = col('polla_answers');
+  const ansIdCol = col('polla_id');
+  const dateCol  = col('date') !== -1 ? col('date') : col('pollq_date');
+  // support both polla_votes and votes
+  let votesCol = col('polla_votes');
+  if (votesCol === -1) votesCol = col('votes');
+
   const polls = {};
-
-  const col = name => header.indexOf(name);
-  const idCol     = col('pollq_id');
-  const qCol      = col('pollq_question');
-  const ansCol    = col('polla_answers');
-  const ansIdCol  = col('polla_id');
-  const votesCol  = col('votes');
-
   for (let i = 1; i < rows.length; i++) {
     const r = rows[i];
     if (!r || r.length < 2) continue;
-    const pid   = (r[idCol] || '').toString().trim() || String(i);
-    const q     = qCol !== -1 ? (r[qCol] || '').trim() : '';
-    const ans   = ansCol !== -1 ? (r[ansCol] || '').trim() : '';
+    const pid   = (r[idCol]    || '').toString().trim() || String(i);
+    const q     = qCol !== -1     ? (r[qCol]     || '').trim() : '';
+    const ans   = ansCol !== -1   ? (r[ansCol]   || '').trim() : '';
     const ansId = ansIdCol !== -1 ? (r[ansIdCol] || '').toString().trim() : '';
+    const date  = dateCol !== -1  ? (r[dateCol]  || '').trim() : '';
     const vRaw  = votesCol !== -1 ? (r[votesCol] || '0').toString().trim() : '0';
     const votes = parseInt(vRaw, 10) || 0;
-
     if (!q || !ans) continue;
-
-    if (!polls[pid]) {
-      polls[pid] = { id: pid, question: q, answers: [] };
-    }
-    polls[pid].answers.push({ text: ans, ansId: ansId, votes: votes, rowIndex: i });
+    if (!polls[pid]) polls[pid] = { id: pid, question: q, date, answers: [] };
+    polls[pid].answers.push({ text: ans, ansId, votes, rowIndex: i });
   }
-
   return Object.values(polls).map(p => {
     p.answers.sort((a, b) => a.text.localeCompare(b.text));
     return p;
+  }).sort((a, b) => {
+    const da = a.date ? new Date(a.date) : new Date(0);
+    const db = b.date ? new Date(b.date) : new Date(0);
+    return db - da;
   });
 }
 
-/* ——— STATE ——— */
-let allPolls = [];
-let currentPoll = null;
-let selectedAnswers = new Set();
-let rawRows = [];
-
-/* ——— UI HELPERS ——— */
+let allPolls = [], filteredPolls = [];
+let currentPoll = null, selectedAnswers = new Set();
+let currentPage = 1, pageSize = 25;
 const $ = id => document.getElementById(id);
-const statusBar = $('status-bar');
 
-function showStatus(msg, type='loading') {
-  statusBar.textContent = msg;
-  statusBar.className = 'status-bar ' + type;
-  statusBar.style.display = 'block';
-}
-function hideStatus() { statusBar.style.display = 'none'; }
-
-/* ——— LOAD DATA ——— */
 async function loadPolls() {
-  showStatus('Fetching poll data…', 'loading');
+  const sb = $('status-bar');
+  sb.style.display = 'block'; sb.className = 'status-bar loading'; sb.textContent = 'Loading polls…';
   try {
     const resp = await fetch(CSV_URL);
     if (!resp.ok) throw new Error('HTTP ' + resp.status);
-    const text = await resp.text();
-    rawRows = parseCSV(text);
-    allPolls = buildPolls(rawRows);
-    if (!allPolls.length) throw new Error('No poll data found in sheet.');
-    hideStatus();
+    allPolls = buildPolls(parseCSV(await resp.text()));
+    if (!allPolls.length) throw new Error('No poll data found. Check sheet column names (pollq_id, pollq_question, polla_id, polla_answers, polla_votes).');
+    sb.style.display = 'none';
+    filteredPolls = [...allPolls];
+    updateStats();
     renderDirectory();
     $('footer-ts').textContent = 'Loaded ' + new Date().toLocaleTimeString();
   } catch(e) {
-    showStatus('Error loading polls: ' + e.message, 'error');
+    sb.className = 'status-bar error'; sb.textContent = 'Error: ' + e.message;
   }
 }
 
-/* ——— DIRECTORY ——— */
-function renderDirectory() {
-  const dir = $('directory');
-  const cards = $('poll-cards');
-  $('dir-count').textContent = allPolls.length + ' poll' + (allPolls.length !== 1 ? 's' : '');
-  cards.innerHTML = '';
-
-  allPolls.forEach((poll, idx) => {
-    const totalVotes = poll.answers.reduce((s, a) => s + a.votes, 0);
-    const card = document.createElement('div');
-    card.className = 'poll-card';
-    card.innerHTML = `
-      <div class="card-num">Poll #${String(idx+1).padStart(2,'0')}</div>
-      <div class="card-question">${escHtml(poll.question)}</div>
-      <div class="card-meta">
-        <span class="card-vote-count">${totalVotes} vote${totalVotes !== 1 ? 's' : ''}</span>
-        <span class="card-arrow">→</span>
-      </div>
-    `;
-    card.addEventListener('click', () => openPoll(poll));
-    cards.appendChild(card);
-  });
-
-  dir.style.display = 'block';
-  $('poll-view').style.display = 'none';
+function updateStats() {
+  $('stat-polls').textContent = allPolls.length;
+  $('stat-votes').textContent = allPolls.reduce((s,p) => s + p.answers.reduce((ss,a) => ss + a.votes, 0), 0).toLocaleString();
 }
 
-/* ——— POLL VIEW ——— */
+$('search-input').addEventListener('input', () => {
+  const q = $('search-input').value.toLowerCase().trim();
+  filteredPolls = q ? allPolls.filter(p => p.question.toLowerCase().includes(q) || p.answers.some(a => a.text.toLowerCase().includes(q))) : [...allPolls];
+  currentPage = 1; renderDirectory();
+});
+$('btn-reset').addEventListener('click', () => {
+  $('search-input').value = ''; filteredPolls = [...allPolls]; currentPage = 1; renderDirectory();
+});
+$('page-size-select').addEventListener('change', e => {
+  pageSize = parseInt(e.target.value, 10); currentPage = 1; renderDirectory();
+});
+
+function renderDirectory() {
+  const grid = $('poll-grid'); grid.innerHTML = '';
+  const total = filteredPolls.length;
+  const ps = pageSize >= 9999 ? total : pageSize;
+  const totalPages = Math.max(1, Math.ceil(total / (ps || 1)));
+  if (currentPage > totalPages) currentPage = totalPages;
+  const start = (currentPage - 1) * ps;
+  const end = Math.min(start + ps, total);
+
+  const q = $('search-input').value.trim();
+  $('filter-status').textContent = q ? `Showing ${total} poll${total!==1?'s':''} matching "${q}"` : `Showing all ${total} poll${total!==1?'s':''}.`;
+
+  filteredPolls.slice(start, end).forEach(poll => {
+    const gi = allPolls.indexOf(poll);
+    const tv = poll.answers.reduce((s,a) => s+a.votes, 0);
+    const card = document.createElement('div');
+    card.className = 'poll-card';
+    card.innerHTML = `<div class="card-num">Poll #${String(gi+1).padStart(2,'0')}</div><div class="card-question">${esc(poll.question)}</div><div class="card-footer"><span class="card-votes">${tv} vote${tv!==1?'s':''}</span><span class="card-arrow">→</span></div>`;
+    card.addEventListener('click', () => openPoll(poll));
+    grid.appendChild(card);
+  });
+
+  const bar = $('pagination-bar');
+  if (!total) { bar.style.display='none'; return; }
+  bar.style.display = 'flex';
+  $('pagination-info').textContent = total <= ps ? `${total} poll${total!==1?'s':''}` : `${start+1}–${end} of ${total} polls`;
+
+  const btns = $('page-btns'); btns.innerHTML = '';
+  if (totalPages <= 1) return;
+  const add = (label, page, active, disabled) => {
+    const b = document.createElement('button');
+    b.className = 'page-btn' + (active?' active':'');
+    b.textContent = label; b.disabled = disabled;
+    b.addEventListener('click', () => { currentPage = page; renderDirectory(); window.scrollTo({top:0,behavior:'smooth'}); });
+    btns.appendChild(b);
+  };
+  add('←', currentPage-1, false, currentPage===1);
+  let pages = [];
+  if (totalPages <= 7) { for (let p=1;p<=totalPages;p++) pages.push(p); }
+  else {
+    pages=[1];
+    if (currentPage>3) pages.push('…');
+    for (let p=Math.max(2,currentPage-1); p<=Math.min(totalPages-1,currentPage+1); p++) pages.push(p);
+    if (currentPage<totalPages-2) pages.push('…');
+    pages.push(totalPages);
+  }
+  pages.forEach(p => {
+    if (p==='…') { const s=document.createElement('span'); s.textContent='…'; s.style.cssText='padding:0 4px;color:var(--ink3);font-size:12px;line-height:28px;'; btns.appendChild(s); }
+    else add(p, p, p===currentPage, false);
+  });
+  add('→', currentPage+1, false, currentPage===totalPages);
+}
+
 function openPoll(poll) {
-  currentPoll = poll;
-  selectedAnswers.clear();
+  currentPoll = poll; selectedAnswers.clear();
   $('directory').style.display = 'none';
-  const pv = $('poll-view');
-  pv.style.display = 'block';
+  $('poll-view').style.display = 'block';
   $('pv-question').textContent = poll.question;
-  $('pv-sub').textContent = poll.sub || '';
-  $('pv-sub').style.display = poll.sub ? 'block' : 'none';
   renderAnswers(poll);
   $('results-panel').classList.remove('visible');
   $('vote-msg').className = 'vote-msg';
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
 function renderAnswers(poll) {
-  const ul = $('pv-answers');
-  ul.innerHTML = '';
+  const ul = $('pv-answers'); ul.innerHTML = '';
   const letters = 'abcdefghijklmnopqrstuvwxyz';
   poll.answers.forEach((ans, i) => {
     const li = document.createElement('li');
-    li.className = 'answer-item' + (selectedAnswers.has(i) ? ' selected' : '');
-    li.dataset.idx = i;
-    li.innerHTML = `
-      <div class="answer-checkbox" aria-hidden="true">
-        <svg class="answer-checkbox-tick" viewBox="0 0 10 10" fill="none">
-          <path d="M1.5 5L4 7.5L8.5 2.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </div>
-      <span class="answer-letter">(${letters[i] || i})</span>
-      <span class="answer-text">${escHtml(ans.text)}</span>
-    `;
-    li.addEventListener('click', () => toggleAnswer(i, li));
+    li.className = 'answer-item' + (selectedAnswers.has(i)?' selected':'');
+    li.innerHTML = `<div class="answer-checkbox"><svg class="tick" viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="answer-letter">(${letters[i]||i})</span><span class="answer-text">${esc(ans.text)}</span>`;
+    li.addEventListener('click', () => { if(selectedAnswers.has(i)){selectedAnswers.delete(i);li.classList.remove('selected');}else{selectedAnswers.add(i);li.classList.add('selected');} });
     ul.appendChild(li);
   });
 }
 
-function toggleAnswer(idx, el) {
-  if (selectedAnswers.has(idx)) {
-    selectedAnswers.delete(idx);
-    el.classList.remove('selected');
-  } else {
-    selectedAnswers.add(idx);
-    el.classList.add('selected');
-  }
-}
-
-/* ——— VOTE ——— */
 $('btn-vote').addEventListener('click', async () => {
-  if (!selectedAnswers.size) {
-    showVoteMsg('Please select at least one answer.', 'error-msg');
-    return;
-  }
-  $('btn-vote').disabled = true;
-  showVoteMsg('Recording your vote…', 'loading-msg');
+  if (!selectedAnswers.size) { showMsg('Please select at least one answer.','error-msg'); return; }
+  $('btn-vote').disabled = true; showMsg('Recording your vote…','');
   try {
-    const votes = [...selectedAnswers].map(idx => ({
-      pollId: String(currentPoll.id),
-      ansId: currentPoll.answers[idx].ansId,
-      answerText: currentPoll.answers[idx].text
-    }));
-
-    const resp = await fetch(APPS_SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ votes })
-    });
-
-    // no-cors means we can't read the response body — but if we got here without throwing, the POST was sent
+    const votes = [...selectedAnswers].map(idx => ({ pollId: String(currentPoll.id), ansId: currentPoll.answers[idx].ansId, answerText: currentPoll.answers[idx].text }));
+    await fetch(APPS_SCRIPT_URL, { method:'POST', mode:'no-cors', headers:{'Content-Type':'application/json'}, body:JSON.stringify({votes}) });
     selectedAnswers.forEach(idx => { currentPoll.answers[idx].votes += 1; });
-    showVoteMsg('✓ Vote recorded! Thank you.', 'success');
-    renderAnswers(currentPoll);
-    renderResults(currentPoll);
-    $('results-panel').classList.add('visible');
-    updateDirectoryCard(currentPoll);
     selectedAnswers.clear();
-  } catch(e) {
-    showVoteMsg('Could not save vote: ' + e.message, 'error-msg');
-  } finally {
-    $('btn-vote').disabled = false;
-  }
+    showMsg('✓ Vote recorded! Thank you.','success');
+    renderAnswers(currentPoll); renderResults(currentPoll);
+    $('results-panel').classList.add('visible'); updateStats();
+  } catch(e) { showMsg('Could not save vote: '+e.message,'error-msg'); }
+  finally { $('btn-vote').disabled = false; }
 });
 
-function updateDirectoryCard(poll) {
-  const totalVotes = poll.answers.reduce((s, a) => s + a.votes, 0);
-  const idx = allPolls.indexOf(poll);
-  const cards = document.querySelectorAll('.poll-card');
-  if (cards[idx]) {
-    const vc = cards[idx].querySelector('.card-vote-count');
-    if (vc) vc.textContent = totalVotes + ' vote' + (totalVotes !== 1 ? 's' : '');
-  }
-}
-
-/* ——— RESULTS ——— */
 $('btn-results').addEventListener('click', () => {
-  const panel = $('results-panel');
-  if (panel.classList.contains('visible')) {
-    panel.classList.remove('visible');
-  } else {
-    renderResults(currentPoll);
-    panel.classList.add('visible');
-  }
+  const p = $('results-panel');
+  if (p.classList.contains('visible')) p.classList.remove('visible');
+  else { renderResults(currentPoll); p.classList.add('visible'); }
 });
 
 function renderResults(poll) {
-  const body = $('results-body');
-  const total = poll.answers.reduce((s, a) => s + a.votes, 0);
+  const body = $('results-body'); body.innerHTML = '';
+  const total = poll.answers.reduce((s,a) => s+a.votes, 0);
   const letters = 'abcdefghijklmnopqrstuvwxyz';
-  body.innerHTML = '';
   poll.answers.forEach((ans, i) => {
-    const pct = total > 0 ? Math.round((ans.votes / total) * 100) : 0;
-    const row = document.createElement('div');
-    row.className = 'result-row';
-    row.innerHTML = `
-      <div class="result-label">
-        <span><span class="result-label-letter">(${letters[i] || i})</span><span class="result-label-text">${escHtml(ans.text)}</span></span>
-        <span class="result-count">${ans.votes} — ${pct}%</span>
-      </div>
-      <div class="result-bar-track">
-        <div class="result-bar-fill" style="width:${pct}%"></div>
-      </div>
-    `;
+    const pct = total>0 ? Math.round((ans.votes/total)*100) : 0;
+    const row = document.createElement('div'); row.className = 'result-row';
+    row.innerHTML = `<div class="result-label"><span><span class="result-label-letter">(${letters[i]||i})</span><span class="result-label-text">${esc(ans.text)}</span></span><span class="result-count">${ans.votes} — ${pct}%</span></div><div class="result-bar-track"><div class="result-bar-fill" style="width:${pct}%"></div></div>`;
     body.appendChild(row);
   });
-  const tot = document.createElement('div');
-  tot.className = 'result-total';
-  tot.textContent = total + ' total vote' + (total !== 1 ? 's' : '') + ' cast';
+  const tot = document.createElement('div'); tot.className='result-total';
+  tot.textContent = total+' total vote'+(total!==1?'s':'')+' cast';
   body.appendChild(tot);
 }
 
-/* ——— BACK ——— */
 $('back-btn').addEventListener('click', () => {
-  $('poll-view').style.display = 'none';
-  $('directory').style.display = 'block';
-  currentPoll = null;
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  $('poll-view').style.display='none'; $('directory').style.display='block';
+  currentPoll=null; window.scrollTo({top:0,behavior:'smooth'});
 });
 
-/* ——— VOTE MSG ——— */
-function showVoteMsg(msg, cls) {
-  const el = $('vote-msg');
-  el.textContent = msg;
-  el.className = 'vote-msg ' + cls;
-}
+function showMsg(msg, cls) { const el=$('vote-msg'); el.textContent=msg; el.className='vote-msg '+cls; }
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-/* ——— UTIL ——— */
-function escHtml(str) {
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-}
-
-/* ——— INIT ——— */
 loadPolls();
 </script>
 </body>
