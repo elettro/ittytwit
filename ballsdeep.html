@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IttyTwit Poll App — Add New Poll</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1a1a2e; --ink2: #3d3d5c; --ink3: #7a7a9a;
+  --cream: #f5f2eb; --cream2: #ede9df; --cream3: #e2ddd3;
+  --white: #ffffff; --accent: #c0392b; --accent2: #e74c3c; --gold: #d4a843;
+  --border: rgba(26,26,46,0.1); --border2: rgba(26,26,46,0.2);
+  --shadow: 0 2px 12px rgba(26,26,46,0.08);
+  --green: #1a6b3a; --green-bg: #edfbf3; --green-border: #a8dfbc;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: #edeae3; color: var(--ink); min-height: 100vh; }
+
+/* MASTHEAD */
+.masthead { background: var(--ink); border-bottom: 4px solid var(--accent); }
+.masthead-inner { max-width: 780px; margin: 0 auto; padding: 28px 32px 24px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.masthead-tag { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--gold); opacity: 0.9; }
+.masthead-headline { font-family: 'Bebas Neue', sans-serif; font-size: clamp(32px, 6vw, 60px); letter-spacing: 0.03em; color: #fff; line-height: 1; text-align: center; }
+.masthead-headline span { color: var(--accent2); }
+.masthead-sub { font-size: 13px; color: rgba(255,255,255,0.4); letter-spacing: 0.06em; font-style: italic; margin-top: 2px; }
+
+/* PAGE */
+.page { max-width: 780px; margin: 0 auto; padding: 40px 32px 80px; }
+
+/* BACK LINK */
+.back-link { display: inline-flex; align-items: center; gap: 6px; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink2); text-decoration: none; margin-bottom: 28px; transition: color 0.15s; }
+.back-link:hover { color: var(--accent); }
+
+/* FORM CARD */
+.form-card { background: var(--white); border: 1px solid var(--border2); border-radius: 12px; padding: 36px 40px; box-shadow: var(--shadow); }
+
+.form-header { margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--border2); }
+.form-eyebrow { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink3); margin-bottom: 8px; }
+.form-title { font-weight: 700; font-size: 28px; color: var(--ink); line-height: 1.1; }
+.form-desc { font-size: 14px; color: var(--ink2); margin-top: 8px; line-height: 1.6; }
+
+/* FIELD */
+.field { margin-bottom: 24px; }
+.field-label { display: block; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink3); margin-bottom: 8px; }
+.field-label span { color: var(--accent); margin-left: 3px; }
+.field-input { width: 100%; border: 1px solid var(--border2); border-radius: 8px; padding: 11px 16px; font-size: 14px; font-family: 'DM Sans', sans-serif; color: var(--ink); background: #fafaf8; outline: none; transition: border-color 0.15s, box-shadow 0.15s; }
+.field-input:focus { border-color: var(--ink); box-shadow: 0 0 0 3px rgba(26,26,46,0.06); }
+.field-input::placeholder { color: var(--ink3); }
+.field-input.error { border-color: var(--accent); }
+.field-hint { font-size: 12px; color: var(--ink3); margin-top: 6px; font-style: italic; }
+
+/* ANSWERS SECTION */
+.answers-section { margin-bottom: 32px; }
+.answers-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink3); margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; }
+.answers-hint { font-weight: 400; font-size: 10px; color: var(--ink3); font-style: italic; text-transform: none; letter-spacing: 0; }
+
+.answer-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.answer-letter { font-family: 'Bebas Neue', sans-serif; font-size: 20px; color: var(--ink3); flex-shrink: 0; width: 20px; text-align: center; line-height: 1; padding-top: 2px; }
+.answer-input { flex: 1; border: 1px solid var(--border2); border-radius: 8px; padding: 11px 16px; font-size: 14px; font-family: 'DM Sans', sans-serif; color: var(--ink); background: #fafaf8; outline: none; transition: border-color 0.15s, box-shadow 0.15s; }
+.answer-input:focus { border-color: var(--ink); box-shadow: 0 0 0 3px rgba(26,26,46,0.06); }
+.answer-input::placeholder { color: var(--ink3); }
+.answer-input:not(:placeholder-shown) { background: #fff; }
+.answer-status { width: 20px; flex-shrink: 0; font-size: 14px; text-align: center; color: var(--ink3); transition: color 0.15s; }
+.answer-input:not(:placeholder-shown) + .answer-status { color: var(--green); }
+
+/* TIMESTAMP DISPLAY */
+.timestamp-field { background: var(--cream2); border: 1px solid var(--border); border-radius: 8px; padding: 11px 16px; font-size: 13px; font-family: 'DM Mono', monospace; color: var(--ink3); }
+
+/* DIVIDER */
+.divider { border: none; border-top: 1px solid var(--border2); margin: 32px 0; }
+
+/* SUBMIT AREA */
+.submit-area { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.btn-submit { font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; background: var(--accent); color: #fff; border: none; padding: 14px 36px; border-radius: 8px; cursor: pointer; transition: background 0.15s, transform 0.1s; }
+.btn-submit:hover { background: #a93226; }
+.btn-submit:active { transform: scale(0.98); }
+.btn-submit:disabled { background: var(--ink3); cursor: not-allowed; }
+.btn-clear { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; background: none; color: var(--ink3); border: 1px solid var(--border2); padding: 13px 22px; border-radius: 8px; cursor: pointer; transition: border-color 0.15s, color 0.15s; }
+.btn-clear:hover { border-color: var(--ink2); color: var(--ink2); }
+.submit-note { font-size: 12px; color: var(--ink3); font-style: italic; }
+
+/* ALERTS */
+.alert { display: none; padding: 14px 18px; border-radius: 8px; font-size: 13px; font-family: 'DM Mono', monospace; margin-bottom: 24px; align-items: flex-start; gap: 10px; }
+.alert.visible { display: flex; }
+.alert.success { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+.alert.error { background: #fdf0ef; color: var(--accent); border: 1px solid #f5a89e; }
+.alert-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.alert-body {}
+.alert-title { font-weight: 500; margin-bottom: 2px; }
+.alert-sub { font-size: 11px; opacity: 0.8; }
+
+/* ANSWER COUNT INDICATOR */
+.answer-count-bar { display: flex; gap: 6px; margin-top: 12px; align-items: center; }
+.answer-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--cream3); transition: background 0.2s; }
+.answer-dot.filled { background: var(--accent); }
+.answer-count-label { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--ink3); margin-left: 4px; }
+
+footer { max-width: 780px; margin: 0 auto; padding: 20px 32px; border-top: 1px solid var(--border); font-size: 11px; font-family: 'DM Mono', monospace; color: var(--ink3); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+
+@media (max-width: 600px) {
+  .page { padding: 24px 16px 60px; }
+  .form-card { padding: 24px 20px; }
+  .masthead-inner { padding: 20px 16px 16px; }
+}
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <div class="masthead-inner">
+    <div class="masthead-tag">IttyTwit Poll App</div>
+    <div class="masthead-headline">Add a <span>New Poll</span></div>
+    <div class="masthead-sub">Submitted polls appear immediately at the top of the ALL sheet</div>
+  </div>
+</div>
+
+<div class="page">
+
+  <a class="back-link" href="ittytwit-poll-app.html">← Back to Poll Directory</a>
+
+  <div class="alert" id="alert-success">
+    <div class="alert-icon">✓</div>
+    <div class="alert-body">
+      <div class="alert-title" id="alert-success-title">Poll submitted successfully!</div>
+      <div class="alert-sub" id="alert-success-sub"></div>
+    </div>
+  </div>
+
+  <div class="alert error" id="alert-error">
+    <div class="alert-icon">!</div>
+    <div class="alert-body">
+      <div class="alert-title">Submission failed</div>
+      <div class="alert-sub" id="alert-error-sub"></div>
+    </div>
+  </div>
+
+  <div class="form-card">
+
+    <div class="form-header">
+      <div class="form-eyebrow">New Poll Entry</div>
+      <div class="form-title">Poll Question &amp; Answers</div>
+      <div class="form-desc">Fill in the question and at least 2 answer choices. Leave any unused answer fields blank — they won't be added to the sheet. The poll will be timestamped automatically on submission.</div>
+    </div>
+
+    <!-- QUESTION -->
+    <div class="field">
+      <label class="field-label" for="poll-question">Poll Question <span>*</span></label>
+      <input type="text" class="field-input" id="poll-question" placeholder="e.g. Who do you think was responsible for January 6th?" maxlength="500">
+      <div class="field-hint">This is the main question voters will see.</div>
+    </div>
+
+    <!-- ANSWERS -->
+    <div class="answers-section">
+      <div class="answers-label">
+        Answer Choices <span>*</span>
+        <span class="answers-hint">Blank fields are skipped</span>
+      </div>
+
+      <div class="answer-row">
+        <div class="answer-letter">A</div>
+        <input type="text" class="answer-input" id="ans-a" placeholder="Answer option A…" maxlength="500">
+        <div class="answer-status" id="status-a">○</div>
+      </div>
+      <div class="answer-row">
+        <div class="answer-letter">B</div>
+        <input type="text" class="answer-input" id="ans-b" placeholder="Answer option B…" maxlength="500">
+        <div class="answer-status" id="status-b">○</div>
+      </div>
+      <div class="answer-row">
+        <div class="answer-letter">C</div>
+        <input type="text" class="answer-input" id="ans-c" placeholder="Answer option C (optional)…" maxlength="500">
+        <div class="answer-status" id="status-c">○</div>
+      </div>
+      <div class="answer-row">
+        <div class="answer-letter">D</div>
+        <input type="text" class="answer-input" id="ans-d" placeholder="Answer option D (optional)…" maxlength="500">
+        <div class="answer-status" id="status-d">○</div>
+      </div>
+      <div class="answer-row">
+        <div class="answer-letter">E</div>
+        <input type="text" class="answer-input" id="ans-e" placeholder="Answer option E (optional)…" maxlength="500">
+        <div class="answer-status" id="status-e">○</div>
+      </div>
+
+      <div class="answer-count-bar">
+        <div class="answer-dot" id="dot-0"></div>
+        <div class="answer-dot" id="dot-1"></div>
+        <div class="answer-dot" id="dot-2"></div>
+        <div class="answer-dot" id="dot-3"></div>
+        <div class="answer-dot" id="dot-4"></div>
+        <div class="answer-count-label" id="answer-count-label">0 of 5 answers filled</div>
+      </div>
+    </div>
+
+    <!-- TIMESTAMP -->
+    <div class="field">
+      <label class="field-label">Submission Timestamp (auto-generated)</label>
+      <div class="timestamp-field" id="ts-display">—</div>
+      <div class="field-hint">Recorded automatically when you click Submit.</div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="submit-area">
+      <button class="btn-submit" id="btn-submit">Submit Poll</button>
+      <button class="btn-clear" id="btn-clear">Clear Form</button>
+      <span class="submit-note">Poll rows appear at top of the ALL sheet</span>
+    </div>
+
+  </div>
+
+</div>
+
+<footer>
+  <span>IttyTwit Poll App — Admin</span>
+  <span id="footer-ts"></span>
+</footer>
+
+<script>
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzT1wqrTU6cQQWLe0ImULOGOo70LJuVuW08ZEWiHyhK_r-QbFylLXzqNroxFGkrYAKn/exec';
+
+const $ = id => document.getElementById(id);
+
+/* ——— LIVE TIMESTAMP ——— */
+function fmtDate(d) {
+  const mm = String(d.getMonth()+1).padStart(2,'0');
+  const dd = String(d.getDate()).padStart(2,'0');
+  const yy = String(d.getFullYear()).slice(-2);
+  return `${mm}/${dd}/${yy}`;
+}
+function updateTS() {
+  $('ts-display').textContent = fmtDate(new Date());
+}
+updateTS();
+setInterval(updateTS, 30000);
+$('footer-ts').textContent = 'Admin form';
+
+/* ——— ANSWER STATUS DOTS ——— */
+const answerIds = ['a','b','c','d','e'];
+function updateAnswerStatus() {
+  let count = 0;
+  answerIds.forEach((id, i) => {
+    const val = $(`ans-${id}`).value.trim();
+    const filled = val.length > 0;
+    if (filled) count++;
+    $(`status-${id}`).textContent = filled ? '●' : '○';
+    $(`status-${id}`).style.color = filled ? 'var(--green)' : 'var(--ink3)';
+    $(`dot-${i}`).className = 'answer-dot' + (filled ? ' filled' : '');
+  });
+  $('answer-count-label').textContent = `${count} of 5 answer${count!==1?'s':''} filled`;
+}
+answerIds.forEach(id => $(`ans-${id}`).addEventListener('input', updateAnswerStatus));
+
+/* ——— CLEAR ——— */
+$('btn-clear').addEventListener('click', () => {
+  $('poll-question').value = '';
+  answerIds.forEach(id => $(`ans-${id}`).value = '');
+  $('poll-question').classList.remove('error');
+  hideAlerts();
+  updateAnswerStatus();
+  $('poll-question').focus();
+});
+
+/* ——— ALERTS ——— */
+function showSuccess(title, sub) {
+  const el = $('alert-success');
+  $('alert-success-title').textContent = title;
+  $('alert-success-sub').textContent = sub;
+  el.className = 'alert success visible';
+  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+function showError(msg) {
+  const el = $('alert-error');
+  $('alert-error-sub').textContent = msg;
+  el.className = 'alert error visible';
+  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+function hideAlerts() {
+  $('alert-success').className = 'alert success';
+  $('alert-error').className = 'alert error';
+}
+
+/* ——— SUBMIT ——— */
+$('btn-submit').addEventListener('click', async () => {
+  hideAlerts();
+
+  const question = $('poll-question').value.trim();
+  const answers = answerIds.map(id => $(`ans-${id}`).value.trim()).filter(v => v.length > 0);
+  const timestamp = fmtDate(new Date());
+
+  // Validate
+  let valid = true;
+  if (!question) {
+    $('poll-question').classList.add('error');
+    $('poll-question').focus();
+    showError('Poll question is required.');
+    valid = false;
+  } else {
+    $('poll-question').classList.remove('error');
+  }
+  if (valid && answers.length < 2) {
+    showError('Please fill in at least 2 answer choices.');
+    valid = false;
+  }
+  if (!valid) return;
+
+  $('btn-submit').disabled = true;
+  $('btn-submit').textContent = 'Submitting…';
+
+  try {
+    await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'addPoll',
+        question,
+        answers,
+        timestamp
+      })
+    });
+
+    // no-cors = can't read response, assume success if no throw
+    showSuccess(
+      `Poll submitted — ${answers.length} answer${answers.length!==1?'s':''} added.`,
+      `"${question}" — ${timestamp} — rows inserted at top of ALL sheet.`
+    );
+
+    // clear form
+    $('poll-question').value = '';
+    answerIds.forEach(id => $(`ans-${id}`).value = '');
+    updateAnswerStatus();
+
+  } catch(e) {
+    showError('Network error: ' + e.message + '. Check your Apps Script URL.');
+  } finally {
+    $('btn-submit').disabled = false;
+    $('btn-submit').textContent = 'Submit Poll';
+  }
+});
+
+/* ——— ENTER KEY on question jumps to first answer ——— */
+$('poll-question').addEventListener('keydown', e => {
+  if (e.key === 'Enter') { e.preventDefault(); $('ans-a').focus(); }
+});
+/* Tab through answers naturally, Enter on last submits */
+$('ans-e').addEventListener('keydown', e => {
+  if (e.key === 'Enter') { e.preventDefault(); $('btn-submit').click(); }
+});
+</script>
+</body>
+</html>
