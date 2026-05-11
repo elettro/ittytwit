@@ -17,8 +17,9 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'DM Sans', sans-serif; background: #edeae3; color: var(--ink); min-height: 100vh; }
 
-/* MASTHEAD */
-.masthead { background: var(--ink); border-bottom: 4px solid var(--accent); }
+/* MASTHEAD — clickable link */
+a.masthead { background: var(--ink); border-bottom: 4px solid var(--accent); display: block; text-decoration: none; transition: background 0.15s; }
+a.masthead:hover { background: #111122; }
 .masthead-inner { max-width: 980px; margin: 0 auto; padding: 28px 32px 24px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
 .masthead-tag { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--gold); opacity: 0.9; }
 .masthead-headline { font-family: 'Bebas Neue', sans-serif; font-size: clamp(38px, 7vw, 72px); letter-spacing: 0.03em; color: #fff; line-height: 1; text-align: center; }
@@ -49,15 +50,7 @@ body { font-family: 'DM Sans', sans-serif; background: #edeae3; color: var(--ink
 
 /* YEAR PILLS */
 .year-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
-.year-pill {
-  display: inline-flex; align-items: center; gap: 5px;
-  font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500;
-  padding: 5px 13px; border-radius: 20px;
-  border: 1px solid var(--border2); background: var(--cream2);
-  color: var(--ink2); cursor: pointer;
-  transition: background 0.12s, border-color 0.12s, color 0.12s;
-  white-space: nowrap;
-}
+.year-pill { display: inline-flex; align-items: center; gap: 6px; font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500; padding: 5px 13px; border-radius: 20px; border: 1px solid var(--border2); background: var(--cream2); color: var(--ink2); cursor: pointer; transition: background 0.12s, border-color 0.12s, color 0.12s; white-space: nowrap; }
 .year-pill:hover { background: var(--cream3); border-color: var(--ink2); color: var(--ink); }
 .year-pill.active { background: var(--ink); border-color: var(--ink); color: #fff; }
 .pill-count { font-size: 10px; opacity: 0.65; }
@@ -75,12 +68,12 @@ body { font-family: 'DM Sans', sans-serif; background: #edeae3; color: var(--ink
 .poll-card::after { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--accent); transform: scaleY(0); transform-origin: top; transition: transform 0.2s; }
 .poll-card:hover { box-shadow: 0 6px 24px rgba(26,26,46,0.13); transform: translateY(-2px); border-color: var(--ink2); }
 .poll-card:hover::after { transform: scaleY(1); }
-.card-num { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--accent); letter-spacing: 0.12em; margin-bottom: 9px; }
-.card-date { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--ink3); margin-bottom: 6px; }
+.card-num { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--accent); letter-spacing: 0.12em; margin-bottom: 4px; }
+.card-date { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--ink3); margin-bottom: 8px; }
 .card-question { font-size: 14px; font-weight: 500; line-height: 1.5; color: var(--ink); margin-bottom: 16px; }
 .card-footer { display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-family: 'DM Mono', monospace; color: var(--ink3); }
 .card-votes { background: var(--cream2); padding: 3px 9px; border-radius: 4px; }
-.card-arrow { transition: transform 0.15s; font-size: 14px; }
+.card-arrow { transition: transform 0.15px; font-size: 14px; }
 .poll-card:hover .card-arrow { transform: translateX(4px); }
 
 /* PAGINATION */
@@ -101,8 +94,8 @@ body { font-family: 'DM Sans', sans-serif; background: #edeae3; color: var(--ink
 .back-btn:hover { color: var(--accent); }
 .poll-hero { margin-top: 20px; padding: 30px 36px 26px; background: var(--ink); border-radius: 10px; }
 .poll-hero-eyebrow { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); opacity: 0.85; margin-bottom: 10px; }
-.poll-hero-date { font-family: 'DM Mono', monospace; font-size: 11px; color: rgba(255,255,255,0.45); margin-top: 10px; letter-spacing: 0.08em; }
 .poll-hero-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(24px, 4vw, 44px); color: #fff; line-height: 1.05; letter-spacing: 0.02em; }
+.poll-hero-date { font-family: 'DM Mono', monospace; font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 10px; letter-spacing: 0.08em; }
 .poll-body { background: var(--white); border: 1px solid var(--border2); border-radius: 10px; margin-top: 14px; padding: 28px 32px; box-shadow: var(--shadow); }
 .poll-instruction { font-family: 'DM Mono', monospace; font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink3); margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
 .answer-list { list-style: none; }
@@ -154,13 +147,14 @@ footer { max-width: 980px; margin: 0 auto; padding: 20px 32px; border-top: 1px s
 </head>
 <body>
 
-<div class="masthead">
+<!-- MASTHEAD — clicking returns to homepage (index.html) -->
+<a class="masthead" href="index.html">
   <div class="masthead-inner">
     <div class="masthead-tag">IttyTwit Poll App</div>
     <div class="masthead-headline">Do You Think <span>What We Think?</span></div>
     <div class="masthead-sub">Pick Your Choice(s) — Multiple Selections Allowed</div>
   </div>
-</div>
+</a>
 
 <div class="page">
 
@@ -245,6 +239,17 @@ footer { max-width: 980px; margin: 0 auto; padding: 20px 32px; border-top: 1px s
 const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ3CRLifNyDu2qf1ela4w8jE6VAaoyd1zOMyiGfQun8DKQVS4kWN3uTacEf92GnnKrAxz8ljqxmzADI/pub?gid=877862836&single=true&output=csv';
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzT1wqrTU6cQQWLe0ImULOGOo70LJuVuW08ZEWiHyhK_r-QbFylLXzqNroxFGkrYAKn/exec';
 
+/* ——— DATE FORMATTER — always mm/dd/yyyy ——— */
+function fmtDate(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  if (isNaN(d)) return dateStr;
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  const yyyy = d.getFullYear();
+  return `${mm}/${dd}/${yyyy}`;
+}
+
 function parseCSV(text) {
   const rows = [];
   for (const line of text.split(/\r?\n/)) {
@@ -309,7 +314,6 @@ let allPolls = [], filteredPolls = [];
 let currentPoll = null, selectedAnswers = new Set();
 let currentPage = 1, pageSize = 25;
 let activeYear = null;
-
 const $ = id => document.getElementById(id);
 
 /* ——— LOAD ——— */
@@ -332,7 +336,6 @@ async function loadPolls() {
   }
 }
 
-/* ——— STATS ——— */
 function updateStats() {
   $('stat-polls').textContent = allPolls.length;
   $('stat-votes').textContent = allPolls.reduce((s,p) => s + p.answers.reduce((ss,a) => ss + a.votes, 0), 0).toLocaleString();
@@ -342,28 +345,16 @@ function updateStats() {
 function buildYearPills() {
   const container = $('year-pills');
   container.innerHTML = '';
-
-  // count polls per year from allPolls
   const yearCounts = {};
   for (const p of allPolls) {
-    const y = p.year;
-    if (y) yearCounts[y] = (yearCounts[y] || 0) + 1;
+    if (p.year) yearCounts[p.year] = (yearCounts[p.year] || 0) + 1;
   }
-
-  // sort years descending
-  const years = Object.keys(yearCounts).sort((a, b) => b - a);
-
-  years.forEach(year => {
+  Object.keys(yearCounts).sort((a, b) => b - a).forEach(year => {
     const pill = document.createElement('button');
     pill.className = 'year-pill' + (activeYear === year ? ' active' : '');
     pill.innerHTML = `<span>${year}</span><span class="pill-count">${yearCounts[year]}</span>`;
     pill.addEventListener('click', () => {
-      if (activeYear === year) {
-        activeYear = null;
-      } else {
-        activeYear = year;
-      }
-      // update pill active states
+      activeYear = activeYear === year ? null : year;
       container.querySelectorAll('.year-pill').forEach(p => p.classList.remove('active'));
       if (activeYear) pill.classList.add('active');
       currentPage = 1;
@@ -377,7 +368,7 @@ function buildYearPills() {
 function applyFilters() {
   const q = $('search-input').value.toLowerCase().trim();
   filteredPolls = allPolls.filter(p => {
-    const matchYear = !activeYear || p.year === activeYear;
+    const matchYear   = !activeYear || p.year === activeYear;
     const matchSearch = !q || p.question.toLowerCase().includes(q) || p.answers.some(a => a.text.toLowerCase().includes(q));
     return matchYear && matchSearch;
   });
@@ -418,11 +409,12 @@ function renderDirectory() {
   filteredPolls.slice(start, end).forEach(poll => {
     const gi = allPolls.indexOf(poll);
     const tv = poll.answers.reduce((s,a) => s+a.votes, 0);
+    const dateDisplay = fmtDate(poll.date);
     const card = document.createElement('div');
     card.className = 'poll-card';
     card.innerHTML = `
       <div class="card-num">Poll #${String(gi+1).padStart(2,'0')}</div>
-      ${poll.date ? `<div class="card-date">${esc(poll.date)}</div>` : ''}
+      ${dateDisplay ? `<div class="card-date">${dateDisplay}</div>` : ''}
       <div class="card-question">${esc(poll.question)}</div>
       <div class="card-footer">
         <span class="card-votes">${tv} vote${tv!==1?'s':''}</span>
@@ -432,7 +424,6 @@ function renderDirectory() {
     grid.appendChild(card);
   });
 
-  // pagination
   const bar = $('pagination-bar');
   if (!total) { bar.style.display='none'; return; }
   bar.style.display = 'flex';
@@ -474,11 +465,9 @@ function openPoll(poll) {
   $('poll-view').style.display = 'block';
   $('pv-question').textContent = poll.question;
   const pvDate = $('pv-date');
-  if (poll.date) {
-    const d = new Date(poll.date);
-    pvDate.textContent = isNaN(d) ? poll.date : (d.getMonth()+1).toString().padStart(2,'0') + '/' + d.getDate().toString().padStart(2,'0') + '/' + d.getFullYear().toString().slice(-2);
-    pvDate.style.display = 'block';
-  } else { pvDate.style.display = 'none'; }
+  const dateDisplay = fmtDate(poll.date);
+  if (dateDisplay) { pvDate.textContent = dateDisplay; pvDate.style.display = 'block'; }
+  else { pvDate.style.display = 'none'; }
   renderAnswers(poll);
   $('results-panel').classList.remove('visible');
   $('vote-msg').className = 'vote-msg';
