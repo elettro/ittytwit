@@ -357,6 +357,7 @@ async function loadPolls() {
     buildYearPills();
     renderDirectory();
     $('footer-ts').textContent = 'Loaded ' + new Date().toLocaleTimeString();
+    checkHash();
   } catch(e) {
     sb.className = 'status-bar error'; sb.textContent = 'Error: ' + e.message;
   }
@@ -585,12 +586,6 @@ function checkHash() {
   const pid = hash.replace('#poll-', '');
   const poll = allPolls.find(p => String(p.id) === pid);
   if (poll) openPoll(poll, false);
-}
-
-const _origLoad = loadPolls;
-async function loadPolls() {
-  await _origLoad();
-  checkHash();
 }
 
 loadPolls();
