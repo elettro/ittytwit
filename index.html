@@ -240,10 +240,29 @@ const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ3CRLifNyDu2qf
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzT1wqrTU6cQQWLe0ImULOGOo70LJuVuW08ZEWiHyhK_r-QbFylLXzqNroxFGkrYAKn/exec';
 
 /* ——— DATE FORMATTER — always mm/dd/yyyy ——— */
+function excelSerialToDate(serial) {
+  // Excel serial: days since 1900-01-00 (with leap year bug)
+  const utc = (serial - 25569) * 86400 * 1000;
+  return new Date(utc);
+}
+
+function parseAnyDate(raw) {
+  if (!raw) return null;
+  const s = String(raw).trim();
+  if (!s) return null;
+  // Pure number = Excel serial
+  if (/^\d+(\.\d+)?$/.test(s)) {
+    const d = excelSerialToDate(parseFloat(s));
+    return isNaN(d) ? null : d;
+  }
+  const d = new Date(s);
+  return isNaN(d) ? null : d;
+}
+
 function fmtDate(dateStr) {
   if (!dateStr) return '';
-  const d = new Date(dateStr);
-  if (isNaN(d)) return dateStr;
+  const d = parseAnyDate(dateStr);
+  if (!d) return String(dateStr);
   const mm = String(d.getMonth() + 1).padStart(2, '0');
   const dd = String(d.getDate()).padStart(2, '0');
   const yyyy = d.getFullYear();
@@ -268,6 +287,8 @@ function parseCSV(text) {
 
 function extractYear(dateStr) {
   if (!dateStr) return null;
+  const d = parseAnyDate(dateStr);
+  if (d) return String(d.getFullYear());
   const m = String(dateStr).match(/\b(19|20)\d{2}\b/);
   return m ? m[0] : null;
 }
@@ -279,8 +300,8 @@ function buildPolls(rows) {
   const idCol    = col('pollq_id');
   const qCol     = col('pollq_question');
   const ansCol   = col('polla_answers');
-  const ansIdCol = col('polla_id');
-  const dateCol  = col('date') !== -1 ? col('date') : col('pollq_date');
+  
+  const dateCol  = col('poll_date');
   let votesCol   = col('polla_votes');
   if (votesCol === -1) votesCol = col('votes');
 
@@ -291,13 +312,12 @@ function buildPolls(rows) {
     const pid   = (r[idCol]    || '').toString().trim() || String(i);
     const q     = qCol !== -1     ? (r[qCol]     || '').trim() : '';
     const ans   = ansCol !== -1   ? (r[ansCol]   || '').trim() : '';
-    const ansId = ansIdCol !== -1 ? (r[ansIdCol] || '').toString().trim() : '';
     const date  = dateCol !== -1  ? (r[dateCol]  || '').trim() : '';
     const vRaw  = votesCol !== -1 ? (r[votesCol] || '0').toString().trim() : '0';
     const votes = parseInt(vRaw, 10) || 0;
     if (!q || !ans) continue;
     if (!polls[pid]) polls[pid] = { id: pid, question: q, date, year: extractYear(date), answers: [] };
-    polls[pid].answers.push({ text: ans, ansId, votes, rowIndex: i });
+    polls[pid].answers.push({ text: ans, votes, rowIndex: i });
   }
   return Object.values(polls).map(p => {
     p.answers.sort((a, b) => a.text.localeCompare(b.text));
@@ -324,7 +344,7 @@ async function loadPolls() {
     const resp = await fetch(CSV_URL);
     if (!resp.ok) throw new Error('HTTP ' + resp.status);
     allPolls = buildPolls(parseCSV(await resp.text()));
-    if (!allPolls.length) throw new Error('No poll data found. Check column names: pollq_id, pollq_question, polla_id, polla_answers, polla_votes.');
+    if (!allPolls.length) throw new Error('No poll data found. Check column names: pollq_id, pollq_question, poll_date, polla_answers, polla_votes.');
     sb.style.display = 'none';
     filteredPolls = [...allPolls];
     updateStats();
@@ -496,7 +516,6 @@ $('btn-vote').addEventListener('click', async () => {
   try {
     const votes = [...selectedAnswers].map(idx => ({
       pollId: String(currentPoll.id),
-      ansId: currentPoll.answers[idx].ansId,
       answerText: currentPoll.answers[idx].text
     }));
     await fetch(APPS_SCRIPT_URL, { method:'POST', mode:'no-cors', headers:{'Content-Type':'application/json'}, body:JSON.stringify({votes}) });
